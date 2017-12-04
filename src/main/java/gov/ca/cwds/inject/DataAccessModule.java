@@ -409,25 +409,26 @@ public class DataAccessModule extends AbstractModule {
     return esDaos.get("screeningsIndex");
   }
 
-  private synchronized Map<String, Client> makeElasticsearchClients(
-      ApiConfiguration apiConfiguration) {
-    if (clients == null) {
-      clients = new ConcurrentHashMap<>();
-      Map<String, ElasticsearchConfiguration> esConfigs =
-          apiConfiguration.getElasticsearchConfigurations();
+  private Map<String, Client> makeElasticsearchClients(ApiConfiguration apiConfiguration) {
+    synchronized (this) {
+      if (clients == null) {
+        clients = new ConcurrentHashMap<>();
+        Map<String, ElasticsearchConfiguration> esConfigs =
+            apiConfiguration.getElasticsearchConfigurations();
 
-      for (Map.Entry<String, ElasticsearchConfiguration> esConfigKey : esConfigs.entrySet()) {
-        ElasticsearchConfiguration config = esConfigs.get(esConfigKey.getKey());
+        for (Map.Entry<String, ElasticsearchConfiguration> esConfigKey : esConfigs.entrySet()) {
+          ElasticsearchConfiguration config = esConfigs.get(esConfigKey.getKey());
 
-        try {
-          TransportClient transportClient = makeESTransportClient(config);
-          transportClient.addTransportAddress(
-              new InetSocketTransportAddress(InetAddress.getByName(config.getElasticsearchHost()),
-                  Integer.parseInt(config.getElasticsearchPort())));
-          clients.put(esConfigKey.getKey(), transportClient);
-        } catch (Exception e) {
-          LOGGER.error("Error initializing Elasticsearch client: {}", e.getMessage(), e);
-          throw new ApiException("Error initializing Elasticsearch client: " + e.getMessage(), e);
+          try {
+            TransportClient transportClient = makeESTransportClient(config);
+            transportClient.addTransportAddress(
+                new InetSocketTransportAddress(InetAddress.getByName(config.getElasticsearchHost()),
+                    Integer.parseInt(config.getElasticsearchPort())));
+            clients.put(esConfigKey.getKey(), transportClient);
+          } catch (Exception e) {
+            LOGGER.error("Error initializing Elasticsearch client: {}", e.getMessage(), e);
+            throw new ApiException("Error initializing Elasticsearch client: " + e.getMessage(), e);
+          }
         }
       }
     }
