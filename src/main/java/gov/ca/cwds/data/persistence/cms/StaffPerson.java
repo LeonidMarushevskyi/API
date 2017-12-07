@@ -49,15 +49,15 @@ public class StaffPerson extends CmsPersistentObject {
   private String jobTitle;
 
   @Column(name = "LAST_NM", length = 25, nullable = false)
-  @ColumnTransformer(read = ("trim(LAST_NM)"))
+  @ColumnTransformer(read = "trim(LAST_NM)")
   private String lastName;
 
   @Column(name = "MID_INI_NM")
-  @ColumnTransformer(read = ("trim(MID_INI_NM)"))
+  @ColumnTransformer(read = "trim(MID_INI_NM)")
   private String middleInitial;
 
   @Column(name = "NMPRFX_DSC")
-  @ColumnTransformer(read = ("trim(NMPRFX_DSC)"))
+  @ColumnTransformer(read = "trim(NMPRFX_DSC)")
   private String namePrefix;
 
   @Column(name = "PHONE_NO")
@@ -72,7 +72,7 @@ public class StaffPerson extends CmsPersistentObject {
   private Date startDate;
 
   @Column(name = "SUFX_TLDSC")
-  @ColumnTransformer(read = ("trim(SUFX_TLDSC)"))
+  @ColumnTransformer(read = "trim(SUFX_TLDSC)")
   private String nameSuffix;
 
   @Column(name = "TLCMTR_IND")
