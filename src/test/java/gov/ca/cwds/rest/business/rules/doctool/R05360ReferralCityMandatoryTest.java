@@ -67,10 +67,8 @@ public class R05360ReferralCityMandatoryTest {
    * 
    * @throws Exception on general error
    */
-
-
   @Test
-  public void shouldBeValidAddressWithBothStreetNameAndNumber() {
+  public void shouldBeValidAddressWithBothStreetNameAndNumber() throws Exception {
     Address address = new CmsAddressResourceBuilder().setStreetNumber("1234")
         .setStreetName("test street name").setCity("test city").buildCmsAddress();
     validator = Validation.buildDefaultValidatorFactory().getValidator();
